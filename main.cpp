@@ -13,6 +13,7 @@ email: bart@grzybicki.pl
 #include <cstdio> //potzebne dla getchar()
 #include <cstdlib> //potrzebne do czyszczenia ekranu
 #include <sstream> // potrzebne do konwertowania zmiennej typu string do int
+#include <time>
 
 using namespace std;
 
@@ -31,6 +32,8 @@ int ocena; // deklaracja zmiennej dla pojedynczej oceny
 int wyjscie = 0; // deklaracja i przypisanie wartosci 0 dla zmiennej okreslajacej czy user chce wyjsc z  programu
 double srednia = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sredniej ocen
 int ilosc_ocen = 0; // deklaracja i przypisanie wartosci 0 dla zmiennej okreslajacej ilosc ocen, z ktorych liczona jest srednia ocen
+char jeszcze_raz; //deklaracja zmiennej dla pytania czy user chce obliczac srednia od poczatku
+int szybkie_wyjscie = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla szybkiego wyjscia z programu (opcja q)
 
 void clear_screen() // funkcja czyszczaca ekran - kod uwglednia platformy Windows i Unix/Linux
 {
@@ -63,14 +66,18 @@ bool isNumeric(const string pszInput, int nNumberBase) // funkcja sprawdzajaca c
 
 void get_ratings() //funkcja pobierajaca oceny
 {
+    jeszcze_raz = 'n';
     do
     {
-        ocena_str = "";;
+        ocena_str = "";
         cout << "Podaj ocene nr " << ilosc_ocen + 1 << ": ";
         cin >> ocena_str;
         if (ocena_str == "q" || ocena_str == "Q")
         {
-            exit_program();
+            //jeszcze_raz = 't';
+            szybkie_wyjscie = 1;
+            wyjscie = 1;
+            break;
         }
         istringstream iss(ocena_str);
         iss >> ocena;
@@ -100,6 +107,8 @@ void get_ratings() //funkcja pobierajaca oceny
 
 int print_average() // funkcja wyswietlajaca srednia ocen
 {
+    if (wyjscie == 1 && szybkie_wyjscie == 1)
+        return 0;
     if (ilosc_ocen  == 0) // wyswietenie komunikatu jesli user nie wprowadzil zadnych ocen
     {
         cout << "Nie wprowadzono zadnych ocen!" << endl;
@@ -124,37 +133,38 @@ void exit_program() // funkcja wychodzaca z programu
     cin.ignore(1024, '\n');
     getchar() >> znak; // pobieranie znaku dla zatrzymania wykonywania programu
     cout << "bye! :)" << endl;
-    exit(0); // wyjscie z programu
+    sleep(1000);
 }
 
-void rerun () // funckja uruchamiajaca wyliczacnie sredniej od poczatku
+void rerun () // funkcja uruchamiajaca wyliczanie sredniej od poczatku
 {
-    char koniec;
-    cout << "Chcesz ponownie obliczyc srednia? (t/n): ";
-    cin.clear();
-    cin.ignore(1024, '\n');
-    cin >> koniec;
-    if (koniec == 't' || koniec == 'T')
+    if (wyjscie == 1 && szybkie_wyjscie == 1)
     {
-        // zerujemy zmienne i uruchamiamy kolejne funkcje do obliczania sredniej
-        suma = 0;
-        wyjscie = 0;
-        srednia = 0;
-        ilosc_ocen = 0;
-        print_header();
-        get_ratings();
-        clear_screen();
-        print_average();
-        rerun();
+        jeszcze_raz = 'n';
+    }
+    else
+    {
+        cout << "Chcesz ponownie obliczyc srednia? (t/n): ";
+        cin.clear();
+        cin.ignore(1024, '\n');
+        cin >> jeszcze_raz;
     }
 }
 
 int main()
 {
+    do
+    {
+    // zerujemy zmienne i uruchamiamy kolejne funkcje do obliczania sredniej
+    suma = 0;
+    wyjscie = 0;
+    srednia = 0;
+    ilosc_ocen = 0;
     print_header(); // wywolanie funkcji wyswietlajacej naglowek programu
     get_ratings(); // wywolanie funkcji pobierajacej oceny
     clear_screen(); // czyszczenie ekranu
     print_average(); // wywolanie funkcji wyswietlajacej srednia ocen
-    rerun();
+    rerun(); // wywolanie funkcji uruchamiajacej obliczanie sredniej od poczatku
+    } while (jeszcze_raz == 't' || jeszcze_raz == 'T');
     exit_program(); // wywolanie funkcji wychodzacej z programu
 }
