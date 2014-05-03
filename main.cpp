@@ -13,7 +13,7 @@ email: bart@grzybicki.pl
 #include <cstdio> //potzebne dla getchar()
 #include <cstdlib> //potrzebne do czyszczenia ekranu
 #include <sstream> // potrzebne do konwertowania zmiennej typu string do int
-//#include <time.h>
+#include <time.h>
 
 using namespace std;
 
@@ -25,6 +25,7 @@ bool isNumeric(const string pszInput, int nNumberBase);
 int print_average();
 void print_header();
 void rerun();
+void sleep(int sekundy);
 
 double suma = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sumy ocen
 string ocena_str; //deklaracja zmiennej typu string dla pobrania oceny
@@ -34,6 +35,15 @@ double srednia = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sredniej
 int ilosc_ocen = 0; // deklaracja i przypisanie wartosci 0 dla zmiennej okreslajacej ilosc ocen, z ktorych liczona jest srednia ocen
 char jeszcze_raz; //deklaracja zmiennej dla pytania czy user chce obliczac srednia od poczatku
 int szybkie_wyjscie = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla szybkiego wyjscia z programu (opcja q)
+
+void sleep(int sekundy) // funkcja wstrzymujaca dzialanie programu na x sekund
+{
+    clock_t czas;
+    czas = clock() + sekundy * CLOCKS_PER_SEC;
+    while (clock() < czas)
+    {
+    }
+}
 
 void clear_screen() // funkcja czyszczaca ekran - kod uwglednia platformy Windows i Unix/Linux
 {
@@ -133,6 +143,7 @@ void exit_program() // funkcja wychodzaca z programu
     cin.ignore(1024, '\n');
     getchar() >> znak; // pobieranie znaku dla zatrzymania wykonywania programu
     cout << "bye! :)" << endl;
+    sleep(1);
 }
 
 void rerun () // funkcja uruchamiajaca wyliczanie sredniej od poczatku
