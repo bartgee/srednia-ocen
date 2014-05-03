@@ -13,7 +13,7 @@ email: bart@grzybicki.pl
 #include <cstdio> //potzebne dla getchar()
 #include <cstdlib> //potrzebne do czyszczenia ekranu
 #include <sstream> // potrzebne do konwertowania zmiennej typu string do int
-#include <time>
+//#include <time.h>
 
 using namespace std;
 
@@ -133,7 +133,6 @@ void exit_program() // funkcja wychodzaca z programu
     cin.ignore(1024, '\n');
     getchar() >> znak; // pobieranie znaku dla zatrzymania wykonywania programu
     cout << "bye! :)" << endl;
-    sleep(1000);
 }
 
 void rerun () // funkcja uruchamiajaca wyliczanie sredniej od poczatku
