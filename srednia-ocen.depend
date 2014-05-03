@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1399058138 source:/home/bart/Dokumenty/c++/CodeBlocks/srednia-ocen/main.cpp
+	<iostream>
+	<iomanip>
+	<cstdio>
+	<cstdlib>
+	<sstream>
+	<string>
+
