@@ -211,6 +211,7 @@ void rerun () // funkcja uruchamiajaca wyliczanie sredniej od poczatku
 
 int main()
 {
+    bool first_run = true;
     do
     {
     // zerujemy zmienne i uruchamiamy kolejne funkcje do obliczania sredniej
@@ -219,11 +220,13 @@ int main()
     srednia = 0;
     ilosc_ocen = 0;
     print_header(); // wywolanie funkcji wyswietlajacej naglowek programu
-    cout << "(oceny moga miec - lub + na koncu)" << endl;
+    if (first_run == true)
+        cout << "(oceny moga miec - lub + na koncu)" << endl << endl;
     get_ratings(); // wywolanie funkcji pobierajacej oceny
     clear_screen(); // czyszczenie ekranu
     print_average(); // wywolanie funkcji wyswietlajacej srednia ocen
     rerun(); // wywolanie funkcji uruchamiajacej obliczanie sredniej od poczatku
+    first_run = false;
     } while (jeszcze_raz == 't' || jeszcze_raz == 'T');
     exit_program(); // wywolanie funkcji wychodzacej z programu
 }
