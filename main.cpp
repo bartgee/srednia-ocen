@@ -30,7 +30,7 @@ bool isNumeric(const string pszInput, int nNumberBase);
 int print_average();
 void print_header();
 void rerun();
-void sleep(int sekundy);
+void sleepcp(int sekundy);
 void print_changelog();
 
 double suma = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sumy ocen
@@ -43,7 +43,7 @@ char jeszcze_raz; //deklaracja zmiennej dla pytania czy user chce obliczac sredn
 int szybkie_wyjscie = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla szybkiego wyjscia z programu (opcja q)
 bool changelog = false;
 
-void sleep(int sekundy) // funkcja wstrzymujaca dzialanie programu na x sekund
+void sleepcp(int sekundy) // funkcja wstrzymujaca dzialanie programu na x sekund
 {
     #ifdef WIN32
     Sleep(sekundy * 1000);
@@ -191,7 +191,7 @@ void exit_program() // funkcja wychodzaca z programu
     cin.ignore(1024, '\n');
     getchar() >> znak; // pobieranie znaku dla zatrzymania wykonywania programu
     cout << "bye! :)" << endl;
-    sleep(1);
+    sleepcp(1);
 }
 
 void rerun () // funkcja uruchamiajaca wyliczanie sredniej od poczatku
