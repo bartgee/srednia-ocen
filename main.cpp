@@ -79,6 +79,8 @@ void print_changelog()
     clear_screen();
     cout << "Changelog / lista zmian w programie" << endl;
     cout << "___________________________________" << endl;
+    cout << "1.2 beta:" << endl;
+    cout << "- poprawiono funkcje sleep() - program jest tak maly, a C++ tak szybkie, ze nie jest to zauwazalne dla Uzytkownika :)"<< endl << endl;
     cout << "1.1 beta:" << endl;
     cout << "- dodano mozliwosc dodawania znakow - i +" << endl;
     cout << "  (do oceny z + dodawana jest wartosc 0.33," << endl;
