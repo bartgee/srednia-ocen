@@ -1,5 +1,5 @@
 /*
-Srednia Ocen (wersja 1.0 beta)
+Srednia Ocen (wersja 1.2 beta)
 
 Program wylicza srednia ocen.
 Przydatny dla uczniow i rodzicow. :)
@@ -65,7 +65,7 @@ void print_header() //funkcja wyswietlajaca naglowek programu
 {
     clear_screen();
     cout << "  ************************************" << endl;
-    cout << "  *  Srednia Ocen (wersja 1.1 beta)  *" << endl;
+    cout << "  *  Srednia Ocen (wersja 1.2 beta)  *" << endl;
     cout << "  *                  autor: bartgee  *" << endl;
     cout << "  *                                  *" << endl;
     cout << "  *  0 - wyliczenie sredniej         *" << endl;
