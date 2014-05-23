@@ -13,7 +13,12 @@ email: bart@grzybicki.pl
 #include <cstdio> //potzebne dla getchar()
 #include <cstdlib> //potrzebne do czyszczenia ekranu
 #include <sstream> // potrzebne do konwertowania zmiennej typu string do int
-#include <time.h>
+// ponizej include'y dla nowej funkcji dzialajacej w Linux i Windows, ktora nie zajmuje czasu CPU
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif // win32
 
 using namespace std;
 
@@ -40,11 +45,11 @@ bool changelog = false;
 
 void sleep(int sekundy) // funkcja wstrzymujaca dzialanie programu na x sekund
 {
-    clock_t czas;
-    czas = clock() + sekundy * CLOCKS_PER_SEC;
-    while (clock() < czas)
-    {
-    }
+    #ifdef WIN32
+    Sleep(sekundy * 1000);
+    #else
+    usleep(sekundy * 1000000);
+    #endif // win32
 }
 
 void clear_screen() // funkcja czyszczaca ekran - kod uwglednia platformy Windows i Unix/Linux
