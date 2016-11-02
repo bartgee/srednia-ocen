@@ -1,7 +1,7 @@
 /*
-Srednia Ocen (wersja 1.2 beta)
+Srednia Ocen (wersja 1.3 beta)
 
-Program wylicza srednia ocen.
+Program wylicza srednia wazonaocen.
 Przydatny dla uczniow i rodzicow. :)
 
 autor: Bart Grzybicki (bartgee)
@@ -10,7 +10,7 @@ email: bart@grzybicki.pl
 
 #include <iostream>
 #include <iomanip> //potrzebne dla ustawienia ilosci miejsc po przecinku dla zmiennej typu double
-#include <cstdio> //potzebne dla getchar()
+#include <cstdio> //potrzebne dla getchar()
 #include <cstdlib> //potrzebne do czyszczenia ekranu
 #include <sstream> // potrzebne do konwertowania zmiennej typu string do int
 // ponizej include'y dla nowej funkcji dzialajacej w Linux i Windows, ktora nie zajmuje czasu CPU
@@ -32,10 +32,14 @@ void print_header();
 void rerun();
 void sleepcp(int sekundy);
 void print_changelog();
+int map_test();
 
-double suma = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sumy ocen
+double suma_ocen = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sumy ocen
+double suma_wag = 0; // deklaracja i przypisanie wartości 0 zmiennej dla sumy wag
 string ocena_str; //deklaracja zmiennej typu string dla pobrania oceny
 double ocena; // deklaracja zmiennej dla pojedynczej oceny
+string waga_str; //deklaracja zmiennej typu string dla pobrania wagi
+double waga; // deklaracja zmiennej dla pojedynczej wagi
 int wyjscie = 0; // deklaracja i przypisanie wartosci 0 dla zmiennej okreslajacej czy user chce wyjsc z  programu
 double srednia = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sredniej ocen
 int ilosc_ocen = 0; // deklaracja i przypisanie wartosci 0 dla zmiennej okreslajacej ilosc ocen, z ktorych liczona jest srednia ocen
@@ -64,14 +68,14 @@ void clear_screen() // funkcja czyszczaca ekran - kod uwglednia platformy Window
 void print_header() //funkcja wyswietlajaca naglowek programu
 {
     clear_screen();
-    cout << "  ************************************" << endl;
-    cout << "  *  Srednia Ocen (wersja 1.2 beta)  *" << endl;
-    cout << "  *                  autor: bartgee  *" << endl;
-    cout << "  *                                  *" << endl;
-    cout << "  *  0 - wyliczenie sredniej         *" << endl;
-    cout << "  *  c - lista zmian                 *" << endl;
-    cout << "  *  q - wyjscie z programu          *" << endl;
-    cout << "  ************************************" << endl << endl;
+    cout << "  *******************************************" << endl;
+    cout << "  *  Srednia Wazona Ocen (wersja 1.3 beta)  *" << endl;
+    cout << "  *                         autor: bartgee  *" << endl;
+    cout << "  *                                         *" << endl;
+    cout << "  *  0 - wyliczenie sredniej                *" << endl;
+    cout << "  *  c - lista zmian                        *" << endl;
+    cout << "  *  q - wyjscie z programu                 *" << endl;
+    cout << "  *******************************************" << endl << endl;
 }
 
 void print_changelog()
@@ -79,14 +83,21 @@ void print_changelog()
     clear_screen();
     cout << "Changelog / lista zmian w programie" << endl;
     cout << "___________________________________" << endl;
-    cout << "1.2 beta:" << endl;
-    cout << "- poprawiono funkcje sleep() - program jest tak maly, a C++ tak szybkie, ze nie jest to zauwazalne dla Uzytkownika :)"<< endl << endl;
+    cout << "1.0 beta:" << endl;
+    cout << "- pierwsza wersja programu" << endl << endl;
     cout << "1.1 beta:" << endl;
     cout << "- dodano mozliwosc dodawania znakow - i +" << endl;
     cout << "  (do oceny z + dodawana jest wartosc 0.33," << endl;
     cout << "  od oceny z - odejmowana jest wartosc 0.33)" << endl << endl;
-    cout << "1.0 beta:" << endl;
-    cout << "- pierwsza wersja programu" << endl << endl;
+    cout << "1.2 beta:" << endl;
+    cout << "- poprawiono funkcje sleep() - program jest tak maly, a C++ tak szybkie, ze nie jest to zauwazalne dla Uzytkownika :)"<< endl << endl;
+    cout << "1.3 beta (2016.11.02):" << endl;
+    cout << "- zmieniono algorytm obliczania sredniej, teraz liczona jest srednia wazona"<< endl << endl;
+    cout << "- poprawiono obliczanie wartosci dla ocen ze znakami + i -" << endl;
+    cout << "  (do oceny z + dodawana jest wartosc 0.5," << endl;
+    cout << "  od oceny z - odejmowana jest wartosc 0.5)" << endl << endl;
+
+
     char znak;
     cout << "Wcisnij ENTER aby powrocic do programu: ";
     cin.clear();
@@ -113,22 +124,22 @@ void get_ratings() //funkcja pobierajaca oceny
         double ocena_minus = 0.00;
         plus_minus = "";
         ocena_str = "";
+        waga_str = "";
         changelog = false;
         cout << "Podaj ocene nr " << ilosc_ocen + 1 << ": ";
         cin >> ocena_str;
         plus_minus = ocena_str.substr(1,1);
         istringstream iss(ocena_str); // konwertujemy string do stringstream
         iss >> ocena; // kopiujemy stringstream do zmiennej liczbowej
-        //cout << ocena << endl;
         if (plus_minus == "+" && ocena < 6)
         {
             ocena_str = ocena_str.substr(0,1);
-            ocena_plus = 0.33;
+            ocena_plus = 0.5;
         }
         if (plus_minus == "-" && ocena > 1)
         {
             ocena_str = ocena_str.substr(0,1);
-            ocena_minus = 0.33;
+            ocena_minus = 0.5;
         }
         if (ocena_str == "q" || ocena_str == "Q")
         {
@@ -150,24 +161,35 @@ void get_ratings() //funkcja pobierajaca oceny
             get_ratings();
             break;
         }
-        if (isNumeric(ocena_str,7) == true && ocena <= 6 && ocena > 0)
+        if (isNumeric(ocena_str, 7) == true && ocena <= 6 && ocena > 0)
         {
             ilosc_ocen++; // zwieksza wartosc zmiennej ilosc_ocen o 1
-            suma = suma + ocena + ocena_plus - ocena_minus; // dodaje sume ocen do wczesniejszej sumy ocen
-            //cout << "ilosc ocen=" << ilosc_ocen;
         }
         if (ocena == 0) // jezeli user wybral wyliczenie sredniej (podal ocene 0) to wychodzimy z petli "do while"
         {
             wyjscie = 1;
             break;
         }
-        srednia = suma/ilosc_ocen; // jezeli user wprowadzil co najmniej jedna ocene, wyliczamy srednia ocen.. a w zasadzie oceny :D
-    } while (wyjscie == 0 && ocena <= 6 && ocena >= 0 || ocena == 'q' || ocena == 'Q');
+        do
+        {
+            cout << "Podaj wage: ";
+            cin >> waga_str;
+            istringstream iss(waga_str); // konwertujemy string do stringstream
+            iss >> waga; // kopiujemy stringstream do zmiennej liczbowej
+            if (waga <=0 || waga > 10)
+            {
+                cout << "Waga musi miec wartosc 1-10!" << endl;
+            }
+        } while (isNumeric(waga_str, 10) == false || waga <= 0 || waga > 10);
+        suma_wag = suma_wag + waga;
+        suma_ocen = suma_ocen + (ocena + ocena_plus - ocena_minus) * waga; // dodaje sume ocen do wczesniejszej sumy ocen
+        srednia = suma_ocen/suma_wag; // jezeli user wprowadzil co najmniej jedna ocene, wyliczamy srednia ocen.. a w zasadzie oceny :D
+    } while ((wyjscie == 0 && ocena <= 6 && ocena >= 0) || ocena == 'q' || ocena == 'Q');
 }
 
 int print_average() // funkcja wyswietlajaca srednia ocen
 {
-    if (wyjscie == 1 && szybkie_wyjscie == 1 || changelog == true)
+    if ((wyjscie == 1 && szybkie_wyjscie == 1) || changelog == true)
         return 0;
     if (ilosc_ocen == 0) // wyswietenie komunikatu jesli user nie wprowadzil zadnych ocen
     {
@@ -187,11 +209,6 @@ int print_average() // funkcja wyswietlajaca srednia ocen
 
 void exit_program() // funkcja wychodzaca z programu
 {
-    char znak;
-    cout << "Wcisnij ENTER aby wyjsc: ";
-    cin.clear();
-    cin.ignore(1024, '\n');
-    getchar() >> znak; // pobieranie znaku dla zatrzymania wykonywania programu
     cout << "bye! :)" << endl;
     sleepcp(1);
 }
@@ -222,13 +239,17 @@ int main()
     do
     {
     // zerujemy zmienne i uruchamiamy kolejne funkcje do obliczania sredniej
-    suma = 0;
+    suma_ocen = 0;
+    suma_wag = 0;
     wyjscie = 0;
     srednia = 0;
     ilosc_ocen = 0;
     print_header(); // wywolanie funkcji wyswietlajacej naglowek programu
     if (first_run == true)
-        cout << "(oceny moga miec - lub + na koncu)" << endl << endl;
+    {
+        cout << "(oceny moga miec - lub + na koncu," << endl;
+        cout << "waga musi miec wartosc 1-10)" << endl << endl;
+    }
     get_ratings(); // wywolanie funkcji pobierajacej oceny
     clear_screen(); // czyszczenie ekranu
     print_average(); // wywolanie funkcji wyswietlajacej srednia ocen
