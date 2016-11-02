@@ -32,7 +32,6 @@ void print_header();
 void rerun();
 void sleepcp(int sekundy);
 void print_changelog();
-int map_test();
 
 double suma_ocen = 0; // deklaracja i przypisanie wartosci 0 zmiennej dla sumy ocen
 double suma_wag = 0; // deklaracja i przypisanie wartości 0 zmiennej dla sumy wag
